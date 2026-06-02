@@ -9,7 +9,7 @@ import axios from "axios";
 import { ServerUrl } from '../App.jsx';
 
 function Auth() {
-
+ 
 const handleGoogleAuth = async() => {
   try {
     const response = await signInWithPopup(auth,provider)
@@ -28,7 +28,7 @@ const handleGoogleAuth = async() => {
     <div className='w-full min-h-screen bg-[#f3f3f3] flex items-center
     justify-center px-6 py-20'>
       <motion.div 
-      initial={{opacity:0  , y:-40}}
+      initial={{opacity:0, y:-45}}
       animate={{opacity:1  , y:0}}
       transition={{duration:1.5}}
       className='w-full max-w-md p-8 rounded-xl bg-white
