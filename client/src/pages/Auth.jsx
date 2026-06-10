@@ -8,7 +8,7 @@ import { auth, provider } from '../utils/firebase.js';
 import axios from "axios";
 import { ServerUrl } from '../App.jsx';
 
-function Auth() {
+function Auth( {isModel = false}) {
  
 const handleGoogleAuth = async() => {
   try {
@@ -25,14 +25,21 @@ const handleGoogleAuth = async() => {
   }
 }
   return (
-    <div className='w-full min-h-screen bg-[#f3f3f3] flex items-center
-    justify-center px-6 py-20'>
+  <div
+  className={`w-full ${
+    isModel
+      ? "py-4"
+      : "min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20"
+  }`}
+>
       <motion.div 
       initial={{opacity:0, y:-45}}
       animate={{opacity:1  , y:0}}
       transition={{duration:1.5}}
-      className='w-full max-w-md p-8 rounded-xl bg-white
-      shadow-2xl border border-gray-200'>
+      className={`
+      w-full
+      ${isModel ? "max-w-md p-8 rounded-3xl" : "max-w-lg p-12 rounded-[32px]"}
+      bg-white shadow-2xl border border-gray-200`}>
         <div className='flex items-center justify-center gap-3 mb-6'>
           <div className='bg-black text-white p-2 rounded-lg'>
            <FaRobot size={18}/>

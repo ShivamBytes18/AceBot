@@ -8,6 +8,7 @@ import {useNavigate}from 'react-router-dom'
 import axios from 'axios';
 import {ServerUrl } from "../App"
 import { setUserData } from '../redux/userSlice'
+import AuthModel from './AuthModel'
 
 function Navbar() {
     const {userData} = useSelector((state)=>state.user)
@@ -15,6 +16,8 @@ function Navbar() {
       const [showUserPopup , setShowUserPopup] = useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [showAuth ,setShowAuth] = useState(false);
+
     const handleLogout = async () => {
       try {
         await axios.get(ServerUrl + "/api/auth/logout",
@@ -46,7 +49,12 @@ function Navbar() {
      </div>
      <div className='flex items-center gap-6 relative'>
       <div className='relative'> 
-        <button onClick={()=>{setShowCreditPopup(!showCreditPopup);
+        <button onClick={()=>{
+            if(!userData){
+              setShowAuth(true)
+              return;
+            }
+          setShowCreditPopup(!showCreditPopup);
           setShowUserPopup(false)
         }}
         className='flex items-center gap-2 bg-gray-100
@@ -67,7 +75,12 @@ function Navbar() {
         )}
          </div>
        <div className='relative'> 
-        <button onClick={()=>{setShowUserPopup(!showUserPopup);
+        <button onClick={()=>{
+             if(!userData){
+              setShowAuth(true)
+              return;
+            }
+            setShowUserPopup(!showUserPopup);
           setShowCreditPopup(false)
         }} className='w-9 h-9 bg-black text-white 
         rounded-full flex items-center justify-center
@@ -96,6 +109,7 @@ function Navbar() {
     </div>
      </div>
     </motion.div>
+    {showAuth && <AuthModel onClose={()=> setShowAuth(false)}/>}
     </div>
   )
 }
