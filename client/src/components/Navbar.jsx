@@ -13,7 +13,7 @@ import AuthModel from './AuthModel'
 function Navbar() {
     const {userData} = useSelector((state)=>state.user)
     const [showCreditPopup , setShowCreditPopup] = useState(false)
-      const [showUserPopup , setShowUserPopup] = useState(false)
+    const [showUserPopup , setShowUserPopup] = useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [showAuth ,setShowAuth] = useState(false);
@@ -36,7 +36,7 @@ function Navbar() {
     <motion.div
     initial={{opacity:0 , y:-40}}
     animate={{opacity:1 , y:0}}
-    transition={{duration:0.6}}
+    transition={{duration:0.02}}
      className='w-full max-w-6xl bg-white rounded-[24px] shadow-sm
     border border-gray-200 px-8 py-4 flex justify-between items-center
     relative'>

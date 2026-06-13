@@ -7,7 +7,7 @@ import Auth from '../pages/Auth.jsx'
 function AuthModel({onClose}) {
     const {userData} = useSelector((state)=>state.user) 
     useEffect(()=>{
-        if(userData){  onclose()}
+        if(userData){  onClose()}
     },[userData,onClose])
 
 
