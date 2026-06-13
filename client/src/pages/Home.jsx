@@ -47,7 +47,7 @@ function Home() {
           <motion.p
           initial={{ opacity:0}}
           animate={{ opacity :1}}
-          transition={{duration:0.1}}
+          transition={{duration:0.6}}
            className='text-black mt-4 sm:mt-6 max-w-xs 
            sm:max-w-lg md:max-w-2xl mx-auto text-sm 
            sm:text-base md:text-lg rounded-full bg-gray-200 px-4 py-2 sm:px-6 sm:py-3'>
@@ -118,26 +118,41 @@ function Home() {
            initial={{ opacity:0 , y:60 }}
            whileInView={{ opacity:1 , y:0}}
            transition={{ duration:0.6 + index *0.2}}
-           whileHover={{ rotate:0 , scale:1.06 }}
+           whileHover={{  scale:1.06 }}
            className={`
            relative bg-white rounded-3xl border-2 border-green-100
            hover:border-green-500 p-10 w-80 max-w-[90%] shadow-md
            hover:shadow-2xl
            transition-all duration-300
-           ${index === 0 ? "rotate-[-4deg]": ""}
-           ${index === 1 ? "rotate-[-3deg] md:-mt-6 shadow-xl": ""}
-           ${index === 2 ? "rotate-[-3deg]": ""}
+          
            `}>
             <div className='absolute -top-8 left-1/2 -translate-x-1/2
             bg-white border-green-500 text-green-600
             w-16 h-16 rounded-2xl flex items-center
             justify-center shadow-lg'>
-        {item.icon}  </div>   
+        {item.icon}  </div> 
+        <div className='pt-10 text-center'>
+          <div className='text-xs text-green-600 font-semibold
+          mb-2 tracking-wider'>{item.step}</div>
+          <h3 className='font-semibold mb-3 text-lg'>{item.title}</h3>
+          <p className='text-sm text-gray-500 leading-relaxed'>{item.desc}</p>
+          </div>  
            </motion.div>  
         ))
       }
     </div>
-
+        
+     <div className='mb-32'>
+      <motion.h2 
+       initial={{ opacity:0 , y:20 }}
+       whileInView={{ opacity:1 , y:0}}
+       transition={{ duration:0.6 }}
+      className='text-4xl font-semibold
+      text-center mb-16'>
+      Advanced AI {" "}
+      <span className='text-green-600'>Capabilities</span>
+      </motion.h2>
+     </div>
       </div>
         {showAuth && <AuthModel onClose={()=> setShowAuth(false)}/>}
     
