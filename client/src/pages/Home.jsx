@@ -13,6 +13,14 @@ import {
 import { HiSparkles } from 'react-icons/hi';
 import AuthModel from '../components/AuthModel'
 import { useNavigate } from 'react-router-dom'
+import evalImg from "../assets/ai-ans.png"
+import hrImg from "../assets/HR.png" 
+import techImg from "../assets/tech.png" 
+import confidenceImg from "../assets/confi.png" 
+import creditImg from "../assets/credit.png" 
+import resumeImg from "../assets/resume.png" 
+import pdfImg from "../assets/pdf.png" 
+import analyticsImg from "../assets/history.png" 
 
 function Home() {
   const {userData} = useSelector((state)=>state.user)
@@ -22,6 +30,9 @@ function Home() {
     <div className='min-h-screen bg-[#f3f3f3] flex flex-col'>
       <Navbar/>
       <div className='flex-1 px-6 py-10'>
+
+        <div className='max-w-6xl mx-auto'>
+
       <div className='flex justify-center mb-2'>
         <div className='bg-gray-200 text-gray-600 text-sm px-4 py-2 
         rounded-full flex items-center gap-2'>
@@ -83,7 +94,7 @@ function Home() {
               whileHover={{opacity:0.9 , scale:1.03}}
               whileTap={{opacity:1 , scale:0.98}}
               className='border border-gray-300 px-10 py-3
-              rounded-full hover:bg-gray-600 transition'
+              rounded-full text-black hover:bg-gray-600   transition'
               >
               Interview History
             </motion.button>
@@ -152,7 +163,63 @@ function Home() {
       Advanced AI {" "}
       <span className='text-green-600'>Capabilities</span>
       </motion.h2>
+       
+       <div className='grid md:grid-cols-2 gap-10'>
+      {
+        [
+          {
+            image: evalImg,
+            icon : <BsBarChart size={18}/>,
+            title:"AI Answer Evaluation",
+            desc:"Scores communication,technical accuracy and cofidence." 
+          },
+           {
+            image: resumeImg,
+            icon : <BsFileEarmarkText size={18}/>,
+            title:"Resume Based Interview",
+            desc:"Project-specific questions based on resume uploaded." 
+          },
+           {
+            image: pdfImg,
+            icon : <BsFileEarmarkText size={18}/>,
+            title:"Downloadable PDF Report",
+            desc:"Detailed strengths,weakness and improvement insights." 
+          },
+           {
+            image: analyticsImg,
+            icon : <BsBarChart size={18}/>,
+            title:"History & Analytics",
+            desc:"Track progress with Performance gap and Topic Analysis." 
+          },
+        ].map((item,index)=>(
+          <motion.div key={index}
+          initial={{ opacity:0 , y:30 }}
+           whileInView={{ opacity:1 , y:0}}
+           transition={{ duration:0.5 , delay: index *0.1}}
+           whileHover={{  scale:1.02 }}
+          className='bg-white border border-gray-200
+          rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all'>
+             <div className='flex flex-col 
+             items-center gap-6'>
+             <div className='w-full md:w-1/2 flex justify-center'>
+             <img src={item.image} alt={item.title} className='w-full h-auto 
+             object-contain max-h-40'/>
+             </div>
+             <div className='w-full md:w-1/2'>
+             </div>
+             <div className='bg-green-100 text-green-600 w-12 h-12
+             rounded-xl flex items-center justify-center mb-4'>
+            {item.icon}
+             </div>
+             <h3 className='font-semibold mb-3 text-xl'>{item.title}</h3>
+             <p className='text-gray-500 text-sm leading-relaxed'>{item.desc}</p>
+             </div>
+             </motion.div>
+        ))
+      }
+      </div>
      </div>
+      </div>
       </div>
         {showAuth && <AuthModel onClose={()=> setShowAuth(false)}/>}
     
