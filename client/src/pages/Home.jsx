@@ -21,6 +21,7 @@ import creditImg from "../assets/credit.png"
 import resumeImg from "../assets/resume.png" 
 import pdfImg from "../assets/pdf.png" 
 import analyticsImg from "../assets/history.png" 
+import Footer from '../components/Footer.jsx'
 
 function Home() {
   const {userData} = useSelector((state)=>state.user)
@@ -219,10 +220,80 @@ function Home() {
       }
       </div>
      </div>
+
+     <div className='mb-32'>
+      <motion.h2 
+       initial={{ opacity:0 , y:20 }}
+       whileInView={{ opacity:1 , y:0}}
+       transition={{ duration:0.6 }}
+      className='text-4xl font-semibold
+      text-center mb-16'>
+      Multiple Interview  {" "}
+      <span className='text-green-600'>Modes</span>
+      </motion.h2>
+       
+       <div className='grid md:grid-cols-2 gap-10'>
+      {
+        [
+          {
+            image: hrImg,
+             //icon : <BsBarChart size={18}/>,
+            title:"HR Interview Mode",
+            desc:"Behavioral and Communication based evaluation." 
+          },
+           {
+            image: techImg,
+           // icon : <BsFileEarmarkText size={18}/>,
+            title:"Technical Mode",
+            desc:"Deep Technical questioning based on selected role." 
+          },
+           {
+            image: confidenceImg,
+           // icon : <BsFileEarmarkText size={18}/>,
+            title:"Confidence Detection",
+            desc:"Basic tone and voice analysis insights." 
+          },
+           {
+            image: creditImg,
+            //icon : <BsBarChart size={18}/>,
+            title:"Credit System",
+            desc:"Unlock Premium Interview sessions." 
+          },
+        ].map((mode,index)=>(
+          <motion.div key={index}
+          initial={{ opacity:0 , y:30 }}
+           whileInView={{ opacity:1 , y:0}}
+           transition={{ duration:0.5 , delay: index *0.1}}
+           whileHover={{  y:-6 }}
+          className='bg-white border border-gray-200
+          rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all'>
+
+             <div className='flex  items-center justify-between gap-6'>
+              <div className="w-1/2">
+               <h3 className="font-semibold text-xl mb-3">
+                {mode.title}
+               </h3>
+               <p className="text-gray-500 text-sm leading-relaxed">
+                {mode.desc}
+               </p>
+              </div>
+              <div className="w-1/2 flex justify-end ">
+              <img src={mode.image}
+              alt={mode.title}
+              className="w-28 h-28 object-contain"
+              />
+              </div>
+             </div>
+             </motion.div>
+        ))
+      }
+      </div>
+     </div>
+
       </div>
       </div>
         {showAuth && <AuthModel onClose={()=> setShowAuth(false)}/>}
-    
+       <Footer/>
     </div>
   )
 }
