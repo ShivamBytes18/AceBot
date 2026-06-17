@@ -25,18 +25,34 @@ export const analyzeResume = async (req, res) => {
          const message = [
             {
                 role : "system" ,
-                content : `
-                Extract structured data from resume.
+                // content : `
+                // Extract structured data from resume.
                 
-                Return strictly JSON:
+                // Return strictly JSON:
                 
-                {
-                  "role" : "string",
-                  "experience" : "string",
-                  "projects" : ["project1","project2"],
-                  "skills" :["skill1" , "skill2"]               
-                   }
-                  `
+                // {
+                //   "role" : "string",
+                //   "experience" : "string",
+                //   "projects" : ["project1","project2"],
+                //   "skills" :["skill1" , "skill2"]               
+                //    }
+                //   `
+                content: `
+                 Extract structured data from the resume.
+
+                 Return ONLY valid JSON.
+
+                 Do not use markdown.
+                 Do not use \`\`\`json.
+                 Do not add explanations.
+
+                 {
+                   "role": "string",
+                   "experience": "string",
+                   "projects": ["project1", "project2"],
+                   "skills": ["skill1", "skill2"]
+                 }
+                 `
             },
             {
                role : "user",
@@ -44,9 +60,21 @@ export const analyzeResume = async (req, res) => {
             }
          ];
        
-         const aiResponse = await askAi(message);
-         const parsed = JSON.parse(aiResponse);
-         fs.unlinkSync(filepath)
+        //  const aiResponse = await askAi(message);
+        //  const parsed = JSON.parse(aiResponse);
+                 const aiResponse = await askAi(message);
+
+                 //console.log("AI RESPONSE:", aiResponse);
+
+                 const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+
+                 if (!jsonMatch) {
+                   throw new Error("No valid JSON found in AI response");
+                 }
+                 
+                 const parsed = JSON.parse(jsonMatch[0]); 
+        
+        fs.unlinkSync(filepath)
 
          res.json({
             role:parsed.role,

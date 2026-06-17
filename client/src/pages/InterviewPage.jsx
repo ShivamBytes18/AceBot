@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import Step1SetUp from "../components/Step1Setup.jsx"
-import Step2Interview from "../components/Step2Interview.jsx"\
+import Step2Interview from "../components/Step2Interview.jsx"
 import Step3Report from '../components/Step3Report.jsx'
 
 function InterviewPage() {
     const [step,setStep] = useState(1)
-    const [interviewData,setInterviewData] = useState(nill)
+    const [interviewData,setInterviewData] = useState(null)
   return (
     <div className='min-h-screen bg-gray-50'>
      
