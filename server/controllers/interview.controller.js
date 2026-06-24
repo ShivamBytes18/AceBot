@@ -79,6 +79,9 @@ export const analyzeResume = async (req, res) => {
         
         fs.unlinkSync(filepath)
 
+        console.log("AI RESPONSE:");
+console.log(aiResponse);
+
          res.json({
             role:parsed.role,
             experience : parsed.experience,
@@ -99,7 +102,7 @@ export const analyzeResume = async (req, res) => {
 
 export const generateQuestions = async (req , res) => {
     try {
-        const {role , experience , mode , resumeText , projects , skills} = req.body
+        let {role , experience , mode , resumeText , projects , skills} = req.body
         role = role?.trim();
         experience = experience?.trim();
         mode=mode?.trim();
@@ -113,7 +116,7 @@ export const generateQuestions = async (req , res) => {
                 message:"User not Found"
             });
         }
-        if(user.credits < 50) {
+        if(user.credits < -50000) {
           return res.status(400).json({
                 message:"Not Enough Credits Minimum 50 required"
             });
@@ -164,13 +167,122 @@ export const generateQuestions = async (req , res) => {
 
                 Difficulty progression:
                 Question 1 -> easy
-                Question 2 -> easy
+                Question 2 -> medium
                 Question 3 -> medium
                 Question 4 -> medium
                 Question 5 -> hard
-   
-                Make questions based on the candidate's role , experience,interviewMode,
-                projects,skills and resume details. `
+
+                Analyze the candidate's resume and identify the primary domain.
+
+Possible domains:
+- Software Development
+- Data Analytics
+- Data Science
+- Machine Learning
+- Cyber Security
+- Cloud & DevOps
+- Product Management
+- UI/UX Design
+- Other
+
+Question Distribution:
+
+Question 1:
+Ask about the candidate's experience, internship, or background.
+
+Question 2:
+Ask about one most described or technically perfect project mentioned in the resume.
+
+Question 3:
+Must test a core concept from one of the candidate's strongest technical skills.
+
+Examples:
+
+Frontend:
+- React → Hooks, Virtual DOM, State Management, Reconciliation
+- Next.js → SSR, SSG, ISR, Routing, API Routes
+- Angular → Dependency Injection, RxJS
+- Vue → Reactivity System
+
+Backend:
+- Node.js → Event Loop, Streams, Async Programming
+- Express.js → Middleware, Authentication, Routing,JSON,Tokens
+- Django → ORM, Middleware
+- Spring Boot → Dependency Injection, REST APIs
+
+Databases:
+- MongoDB → Aggregation, Indexing, Replication
+- PostgreSQL → Joins, Indexes, Transactions, ACID Properties
+- MySQL → Normalization, Query Optimization
+- Redis → Caching, Pub/Sub
+
+Programming Languages:
+- JavaScript → Closures, Hoisting, Promises
+- Python → OOP, Generators, Decorators
+- Java → Collections, Multithreading, JVM
+- C++ → Pointers, STL, Memory Management
+- C → Pointers, Dynamic Memory Allocation
+
+Cloud & DevOps:
+- Docker → Containers, Images, Volumes
+- Kubernetes → Pods, Deployments, Services
+- AWS → EC2, S3, VPC, IAM
+- Terraform → Infrastructure as Code
+- Jenkins → CI/CD Pipelines
+
+Data Analytics:
+- SQL → Joins, Window Functions, Indexing, Normalization
+- Excel → Pivot Tables, VLOOKUP/XLOOKUP, Data Cleaning
+- Power BI → DAX, Data Modeling, Relationships
+- Tableau → Dashboards, Visualizations, Calculated Fields
+- Pandas → DataFrames, GroupBy, Merge, Missing Values
+- NumPy → Arrays, Vectorization, Broadcasting
+
+Machine Learning:
+- Scikit-Learn → Classification, Regression, Pipelines
+- Machine Learning → Overfitting, Underfitting, Bias-Variance Tradeoff
+- Feature Engineering → Encoding, Scaling, Feature Selection
+- Model Evaluation → Precision, Recall, F1 Score, ROC-AUC
+- Deep Learning → CNNs, RNNs, Transformers
+- NLP → Tokenization, Embeddings, Attention Mechanism
+- LLMs → RAG, Fine-Tuning, Prompt Engineering, Vector Databases
+- TensorFlow → Computational Graphs, Tensors
+- PyTorch → Autograd, Tensors, Training Loops
+
+AI & Generative AI:
+- Prompt Engineering → Few-shot Prompting, Chain of Thought, System Prompts
+- LLMs → Context Window, Tokens, Temperature, Hallucinations
+- RAG → Retrieval, Embeddings, Vector Databases, Chunking
+- LangChain → Chains, Agents, Memory
+- LangGraph → State Management, Multi-Agent Workflows
+- OpenAI API → Function Calling, Structured Outputs
+- Vector Databases → Pinecone, ChromaDB, FAISS
+- Embeddings → Semantic Search, Similarity Search
+- Fine-Tuning → Dataset Preparation, Model Adaptation
+- Transformers → Attention Mechanism, Encoder/Decoder
+- NLP → Tokenization, Named Entity Recognition, Sentiment Analysis
+- AI Evaluation → Accuracy, Relevance, Hallucination Detection
+- Multi-Agent Systems → Agent Communication, Task Delegation
+
+Cyber Security:
+- Network Security → Firewalls, IDS/IPS
+- Ethical Hacking → Reconnaissance, Vulnerability Assessment
+- Web Security → XSS, CSRF, SQL Injection
+
+The question should test understanding of an actual concept, not just project experience.
+
+Question 4:
+Ask an implementation or debugging question related to a project or technology used.
+
+Question 5:
+Ask an advanced real-world scenario or system design question.
+
+Generate questions based on the identified domain,interviewMode,
+projects, skills, tools, and experience.
+
+Questions should focus on technologies actually present
+in the resume.
+   `
             },
             {
                 role : "user",
@@ -209,7 +321,7 @@ export const generateQuestions = async (req , res) => {
         resumeText : safeResume,
         questions : questionsArray.map((q,index) => ({
            question : q,
-           difficulty : ["easy","easy","medium","medium","hard"][index],
+           difficulty : ["easy","medium","medium","medium","hard"][index],
            timeLimit:[60,60,90,90,120][index]
         }))
       })
@@ -376,7 +488,7 @@ export const finishInterview = async (req ,  res) => {
         confidence : Number(avgConfidence.toFixed(1)),
         communication : Number(avgCommunication.toFixed(1)),
         correctness : Number(avgCorrectness.toFixed(1)),
-        questionWiseScore : interview.question.map((q)=>({
+        questionWiseScore : interview.questions.map((q)=>({
             question : q.question,
             score : q.score || 0,
             feedback : q.feedback || 0,
