@@ -6,6 +6,8 @@ import { motion } from "motion/react"
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import jsPDF from "jspdf"
+import autoTable from "jspdf-autotable"
 
 function Step3Report({report}) {
   if(!report )
@@ -53,6 +55,128 @@ function Step3Report({report}) {
    
     const score = finalScore;
     const percentage = (score/10)*100;
+    
+    const downloadPDF = () => {
+      const doc = new jsPDF("p", "mm", "a4");
+
+       const pageWidth = doc.internal.pageSize.getWidth();
+       const margin = 20;
+       const contentWidth = pageWidth - margin *2;
+        let currentY = 25;
+
+
+        {/* TITLE*/}
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.setTextColor(34,197,94);
+        doc.text("AI Interview Performance Report",pageWidth/2,currentY,{
+          align:"center"
+        });
+
+        currentY += 5;
+
+        // underline
+        doc.setDrawColor(34,197,94);
+        doc.line(margin , currentY +2,pageWidth- margin , currentY + 2);
+
+        currentY += 15;
+
+        // FINAL SCORE BOX //
+
+        doc.setFillColor(240,253,244);
+        doc.roundedRect(margin , currentY , contentWidth , 20,4,4,"F");
+
+        doc.setFontSize(14);
+        doc.setTextColor(0,0,0);
+        doc.text(
+          `Final Score : ${finalScore}/10`,
+           pageWidth/2,
+           currentY + 12,
+           {  align  :"center"}
+        );
+
+        currentY += 30;
+
+        // SKILLS BOX //
+
+        doc.setFillColor(249,250,251);
+        doc.roundedRect(margin,currentY,contentWidth,30 ,4,4,"F");
+
+        doc.setFontSize(12);
+
+        doc.text(`Confidence:${confidence} `, margin + 10,currentY+10);
+         doc.text(`Communication:${communication} `, margin + 10,currentY + 18);
+          doc.text(`Correctness:${correctness} `, margin + 10,currentY +26);
+          currentY += 45;
+
+          // ADVICE //
+
+          let advice = "";
+          if (finalScore >= 8) {
+            advice = 
+            "Excellent performance.Maintain confidence and structure .Continue refining clarity and supporting answer with strong real-worlds examples";
+          }            
+          else if(finalScore >=5 && finalScore<8) {
+            advice =
+            "Good Foundation shown . Improve clarity and structure.Practice delivering concise , confident answer with stronger supporting examples."
+          } else {
+            advice = 
+            "Significant improvement requried.Focus on structured thinking ,clarity and confident delivery.Practice answer aloud regularly.  "
+          }
+        
+          doc.setFillColor(255,255,255);
+          doc.setDrawColor(220);
+          doc.roundedRect(margin,currentY,contentWidth,35,4,4);
+
+          doc.setFont("helvetica","bold");
+          doc.text("Professional Advice",margin + 10,currentY +10);
+          
+          doc.setFont("helvetica","normal");
+          doc.setFontSize(11);
+
+          const splitAdvice = doc.splitTextToSize(advice,contentWidth - 20);
+          doc.text(splitAdvice,margin + 10 , currentY + 20);
+
+          currentY += 50;
+
+          // QUESTION TABLE //
+
+          autoTable(doc,{
+            startY: currentY,
+            margin:{ left : margin , right: margin},
+            head : [[ "#" , "Question","Score","Feedback"]],
+            body: questionWiseScore.map((q,i)=>[
+              `${i+1}`,
+              q.question,
+              `${q.score}/10`,
+              q.feedback
+            ]),
+            styles : {
+              fontSize:9,
+              cellPadding:5,
+              valign:"top"
+            },
+            headStyles: {
+              fillColor:[34,197,94],
+              textColor:255,
+              halign:"center"
+            },
+            columnStyles:{
+              0: {cellWidth:10 , halign:"center"},
+              1: {cellWidth:55 },
+              2: {cellWidth:20, halign:"center"},
+              3: {cellWidth:"auto"}
+            } ,
+            alternateRowStyles:{
+              fillColor:[249,250,251]
+            },
+               });
+
+
+            doc.save("AI_Interview_Report.pdf")  ;
+
+      }
 
 
 
@@ -75,12 +199,14 @@ function Step3Report({report}) {
             Interview Analytics Dashboard
           </h1>
           <p className='text-black-100 mt-2  text-green-600  flex justify-center p-2'>
-            <HiSparkles size={16} className="bg-green-100 text-green-600  m-1" rounded-xl/>
-           AI-powered performance analysis and Report
+            <HiSparkles size={16} className="bg-green-100 text-green-600  m-1 rounded-xl"/>
+           AI-powered Performance analysis & Report.
           </p>
         </div>
         </div>
-        <button className='bg-emerald-600 hover:bg-emerald-700 text-white
+        <button
+        onClick={downloadPDF}
+         className='bg-emerald-600 hover:bg-emerald-700 text-white
         p-3 rounded-xl shadow-md transition-all duration-300 
         font-semibold text-sm sm:text-base text-nowrap'>
           Download PDF
@@ -96,14 +222,14 @@ function Step3Report({report}) {
         <h3 className="text-gray-500 mb-4 sm:mb-6 text-sm sm:text-base">
           Overall Performance
         </h3>
-        <div className='relative w-20 h-20 sm:w-25 sm:h-25 mx-auto'>
+        <div className='relative w-20 h-20 sm:w-24 sm:h-24 mx-auto'>
            <CircularProgressbar 
            value={percentage}
            text={`${score}/10`}
            styles={buildStyles({
                   textSize :"20px",
-                  path:"#10b981",
-                  textColor:"#ef4444",
+                  pathColor:"#10b981",
+                  textColor:"#111827",
                   trailColor: "#e5e7eb"
            })}
            />
@@ -140,11 +266,18 @@ function Step3Report({report}) {
            </span>
           </div>
           <div className='bg-gray-200 h-2 sm:h-3 rounded-full'>
-            <div className='bg-green-500 h-full rounded-full'
+            {/* <div className='bg-green-500 h-full rounded-full'
             style={{ width :`${s.value *10}%`}}
             >
 
-            </div>
+            </div> */}
+
+            <motion.div
+    initial={{ width: 0 }}
+    animate={{ width: `${s.value * 10}%` }}
+    transition={{ duration: 1 }}
+    className="bg-green-500 h-full rounded-full"
+      />
           </div>
           </div>
         ))
