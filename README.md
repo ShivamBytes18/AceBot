@@ -176,7 +176,7 @@ If this was useful, a star on the repo helps it reach more people.
 
 <div align="center">
 
-# 🎯 AceBot
+#  🤖 AceBot
 
 ### AI-Powered Interview Preparation Platform
 
