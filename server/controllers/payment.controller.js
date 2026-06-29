@@ -1,6 +1,7 @@
 import razorpay from "../services/razorpay.service.js"
 import Payment from "../models/payment.model.js"
 import crypto from "crypto"
+import User from "../models/user.model.js"
 
 export const createOrder = async (req,res) => {
     try {
@@ -25,13 +26,14 @@ export const createOrder = async (req,res) => {
             razorpayOrderId:order.id,
             status:"created",
         })
-          return res.json(user)
+          return res.json(order)
     } catch (error) {
       return res.status(500).json({
         message:`failed to create Razorpay order ${error}`
-      })   
-    }
+      })  
 }
+    }
+
 
 export const verifyPayment = async (req,res) => {
     try {
@@ -50,7 +52,45 @@ export const verifyPayment = async (req,res) => {
                 message:"Inavlid Payment Signature"
             })
         }
+
+        const payment = await Payment.findOne({
+            razorpayOrderId : razorpay_order_id,
+        });
+
+
+        if(!payment) {
+            return res.status(404).json({
+                message:"Payment not Found"
+            })
+        }
+
+        if(payment.status === "paid") {
+            return res.json({
+                message:"Already processed"
+            })
+        }
+
+
+        // Update payment record
+        payment.status = "paid";
+        payment.razorpayPaymentId = razorpay_payment_id;
+        await payment.save();
+
+        //add credits to User
+        const updateUser = await User.findByIdAndUpdate(payment.userId,{
+            $inc:{credits : payment.credits }
+        },{new:true});
+
+        res.json({
+            success :true,
+            message:"Payment verified and credits added",
+            user:updateUser
+        });
+
+
     } catch (error) {
-        
+          return res.status(500).json({
+        message:`failed to verify Razorpay Payment ${error}`
+      }) 
     }
 }
