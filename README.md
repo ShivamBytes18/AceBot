@@ -26,7 +26,7 @@ A full-stack, credit-based SaaS product built end-to-end: authentication, paymen
 
 ## 📖 About
 
-AceBot is a full-stack interview preparation platform that turns a candidate's actual resume into a personalized mock interview. Instead of recycling a generic question bank, it parses the resume's role, skills, experience, and projects, then generates technical and HR questions tailored to that specific profile — and scores the answers with concrete, actionable feedback instead of a pass/fail grade.
+AceBot is a Full-Stack AI Interview preparation platform that turns a candidate's actual resume into a personalized mock interview. Instead of recycling a generic question bank, it parses the resume's role, skills, experience, and projects, then generates technical and HR questions tailored to that specific profile — and scores the answers with concrete, actionable feedback instead of a pass/fail grade.
 
 It's architected as a real SaaS product: Google authentication, a credit-based payment system via Razorpay, AI integration through OpenRouter, voice-based interaction, analytics dashboards, downloadable reports, and a deployed production environment.
 
