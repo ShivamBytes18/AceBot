@@ -4,7 +4,7 @@
 
 ### AI-Powered Interview Preparation Platform
 
-**Upload a resume → Get role-specific questions → Practice with an AI interviewer → Get scored → Get better.**
+**Upload a resume → Get role-specific questions → Practice with an AI interviewer → Get scored and suggestions → Get better.**
 
 A full-stack, credit-based SaaS product built end-to-end: authentication, payments, AI interview generation, voice interaction, analytics, and PDF reporting — not a CRUD demo.
 
